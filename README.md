@@ -27,8 +27,8 @@ Clojure library for creating bots for Telegram messenger
 ### Full code example
 
 ```
-(ns telegram-bot.example
-  (:require [telegram-bot.core :as bot]))
+(ns clobot.example
+  (:require [clobot.core :as bot]))
 
 (def token "PUT:YOUR:TOKEN:HERE")
 
