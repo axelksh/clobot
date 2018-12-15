@@ -1,31 +1,47 @@
-# clobot
+# Clobot
 
-FIXME: description
+Clojure library for creating bots for Telegram messenger
 
 ## Installation
 
-Download from http://example.com/FIXME.
+#### Leiningen
+    [clobot "0.1.0"]
+    
+#### Clojure CLI/deps.edn
+    clobot {:mvn/version "0.1.0"}
+    
+#### Maven
+    <dependency>
+       <groupId>clobot</groupId>
+       <artifactId>clobot</artifactId>
+       <version>0.1.0</version>
+    </dependency>
+    
+#### Greadle
+    compile 'clobot:clobot:0.1.0'
+
 
 ## Usage
 
-FIXME: explanation
-
-    $ java -jar clobot-0.1.0-standalone.jar [args]
-
-## Options
-
-FIXME: listing of options this app accepts.
-
-## Examples
-
+Import namespace
 ```
 (ns clobot.example
   (:require [clobot.core :as bot]))
+```
 
+Create config map with your bot's token, port and bot's name
+```
 (def token "PUT:YOUR:TOKEN:HERE")
 
 (def bot-name "awesome-bot")
 
+(def config {:token token
+             :name bot-name
+             :port 8080})
+```
+
+Create handlers for the commands you whant your bot to perform
+```
 (defn greeting
   [msg]
   (bot/text-message
@@ -42,27 +58,33 @@ FIXME: listing of options this app accepts.
 
 (def handlers {"/hello" greeting
                "no-command" no-command})
+```
 
-(def config {:token token
-             :name bot-name
-             :port 8080})
-
+Start bot with the handlers and the config as parpams
+```
 (defn -main
   []
   (bot/start-bot handlers config))
-  ```
+```
 
-### Bugs
+Web application will start on given port with given bot's name as path. For example: 
 
-...
+**to get brief bot info:**
+```
+http://localhost:8080/awesome-bot/info   
+```
+**URL for webhook:**
+```
+http://localhost:8080/awesome-bot/  
+```
 
-### Any Other Sections
-### That You Think
-### Might be Useful
+**"no-command"** is the reserved key for the hanlder in case user puts a command not defined in your bot. If not provided will be used default error handler.
+```
+(def handlers {"/hello" greeting
+               "no-command" no-command})
+```
+
 
 ## License
 
-Copyright © 2018 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the MIT License
