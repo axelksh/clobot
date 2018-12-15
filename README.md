@@ -30,9 +30,9 @@ Clojure library for creating bots for Telegram messenger
 (ns telegram-bot.example
   (:require [telegram-bot.core :as bot]))
 
-(def token "702233997:AAEN_2tjvGxLQZMMc95Ys2ws7NhGEFVuTLg")
+(def token "PUT:YOUR:TOKEN:HERE")
 
-(def bot-name "bot")
+(def bot-name "awesome-bot")
 
 (defn greeting
   [msg]
