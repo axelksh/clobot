@@ -26,7 +26,7 @@ Clojure library for creating bots for Telegram messenger
 
 ### Full code example
 
-```
+```Clojure
 (ns clobot.example
   (:require [clobot.core :as bot]))
 
@@ -65,13 +65,13 @@ Clojure library for creating bots for Telegram messenger
 
 
 Import namespace
-```
+```Clojure
 (ns clobot.example
   (:require [clobot.core :as bot]))
 ```
 
 Create config map with your bot's token, port and bot's name
-```
+```Clojure
 (def token "PUT:YOUR:TOKEN:HERE")
 
 (def bot-name "awesome-bot")
@@ -82,7 +82,7 @@ Create config map with your bot's token, port and bot's name
 ```
 
 Create handlers for the commands you whant your bot to perform.
-```
+```Clojure
 (defn greeting
   [msg]
   (bot/text-message
@@ -102,7 +102,7 @@ Create handlers for the commands you whant your bot to perform.
 ```
 
 Every time a handler is applied the message object Telegram sent to the bot will passes to the handler and you can process it
-```
+```Clojure
 (defn greeting
   [msg]
   ...
@@ -112,7 +112,7 @@ Every time a handler is applied the message object Telegram sent to the bot will
 Send messages to Telegram
 
 **(text-message _text_ _token_ _chat-id_)**
-```
+```Clojure
 (bot/text-message
     "Hi there from the Clojure bot!"
     token
@@ -128,7 +128,7 @@ The library provides several useful functions to handle messages
 
 
 Start bot with the handlers and the config as parpams
-```
+```Clojure
 (defn -main
   []
   (bot/start-bot handlers config))
@@ -146,7 +146,7 @@ http://localhost:8080/awesome-bot/
 ```
 
 **"no-command"** is the reserved key for the hanlder in case user puts a command not defined in your bot. If not provided will be used default error handler.
-```
+```Clojure
 (def handlers {"/hello" greeting
                "no-command" no-command})
 ```
