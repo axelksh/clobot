@@ -12,27 +12,17 @@
   {:sendMessage "sendMessage"
    :bot-info "getMe"})
 
-(defn make-url
+(defn- make-url
   "Creates full Telegram api url"
   [token method]
   (str telegram-api-host (format "%s/%s" token method)))
 
-(defn make-payload
+(defn- make-payload
   "Creates json payload for clj-http"
   [params-map]
   {:body (json/write-str params-map)
    :content-type :json
    :accept :json})
-
-(defn get-message
-  "Returns message sent to the bot from request object"
-  [req]
-  (get-in req [:body "message"]))
-
-(defn get-no-command
-  "Returns custom error handler if exists"
-  [handlers]
-  (get-in handlers ["no-command"]))
 
 (defn text-message
   "Sends message from the bot to the chat"
@@ -42,12 +32,22 @@
     (make-payload {:text text
                    :chat_id chat-id})))
 
-(defn no-command-default
+(defn- get-message
+  "Returns message sent to the bot from request object"
+  [req]
+  (get-in req [:body "message"]))
+
+(defn- get-no-command
+  "Returns custom error handler if exists"
+  [handlers]
+  (get-in handlers ["no-command"]))
+
+(defn- no-command-default
   "Sends error message to the chat if appropriate handler is not found"
   [command token chat-id]
   (text-message (str command " - Unknown command.") token chat-id))
 
-(defn bot-info
+(defn- bot-info
   "Returns basic information about the bot"
   [config]
   (fn [req]
@@ -55,7 +55,7 @@
       (make-url (:token config)
                 (:bot-info telegram-api-methods)))))
 
-(defn update-handler
+(defn- update-handler
   "Creates a function to resolve the updates got with web-hook
    and applies appropriate handler functions"
   [handlers config]
@@ -73,20 +73,20 @@
                             (:token config)
                             (bot-util/get-chat-id msg))))))))))
 
-(defn make-end-point
+(defn- make-end-point
   "Creates endpoint to get and process updates from Telegram's servers"
   [handlers config]
   (routes
-    (context (str "/" (:name config)) []
+    (context (str "/" (:url config)) []
       (POST "/" [] (update-handler handlers config))
       (GET "/info" [] (bot-info config)))))
 
-(defn print-start-log
+(defn- print-start-log
   [config]
   (println (str "Starting bot on port: " (:port config)))
   (println (str "Bot's token: " (:token config)))
-  (println (format "Get brief bot info: HOST/%s/info" (:name config)))
-  (println (str "Webhook URL: HOST/" (:name config))))
+  (println (format "Get brief bot info: HOST/%s/info" (:url config)))
+  (println (str "Webhook URL: HOST/" (:url config))))
 
 (defn start-bot
   "Starts a Ring web app on a given port"
