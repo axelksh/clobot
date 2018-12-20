@@ -3,7 +3,8 @@
             [compojure.core :refer [routes context POST GET]]
             [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
             [clj-http.client :as http]
-            [clojure.data.json :as json]))
+            [clojure.data.json :as json]
+            [clobot.util :as bot-util]))
 
 (def telegram-api-host "https://api.telegram.org/bot")
 
@@ -27,16 +28,6 @@
   "Returns message sent to the bot from request object"
   [req]
   (get-in req [:body "message"]))
-
-(defn get-command
-  "Returns command sent to the bot from request object"
-  [msg]
-  (get-in msg ["text"]))
-
-(defn get-chat-id
-  "Returns chat id sent to the bot from request object"
-  [msg]
-  (get-in msg ["chat" "id"]))
 
 (defn get-no-command
   "Returns custom error handler if exists"
@@ -70,17 +61,17 @@
   [handlers config]
   (fn [req]
     (let [msg (get-message req)
-          cmd (get-command msg)
+          cmd (bot-util/get-message msg)
           handler (get-in handlers [cmd])]
       (if handler
-        (apply handler [msg])
+        (handler msg)
         (:else (let [no-command (get-no-command handlers)]
                  (if no-command
-                   (apply no-command [msg])
+                   (no-command msg)
                    (:else (no-command-default
                             cmd
                             (:token config)
-                            (get-chat-id msg))))))))))
+                            (bot-util/get-chat-id msg))))))))))
 
 (defn make-end-point
   "Creates endpoint to get and process updates from Telegram's servers"
