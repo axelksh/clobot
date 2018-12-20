@@ -81,10 +81,17 @@
       (POST "/" [] (update-handler handlers config))
       (GET "/info" [] (bot-info config)))))
 
+(defn print-start-log
+  [config]
+  (println (str "Starting bot on port: " (:port config)))
+  (println (str "Bot's token: " (:token config)))
+  (println (format "Get brief bot info: HOST/%s/info" (:name config)))
+  (println (str "Webhook URL: HOST/" (:name config))))
+
 (defn start-bot
   "Starts a Ring web app on a given port"
   [handlers config]
-  (println (str "Starting bot with token: " (:token config)))
+  (print-start-log config)
   (run-jetty (-> (make-end-point handlers config)
                  (wrap-json-body)
                  (wrap-json-response)) {:port (:port config)}))
