@@ -30,7 +30,7 @@
   [config]
   (fn [req]
     (http/get
-      (str api/base-url (:token config) (:bot-info api/methods)))))
+      (str api/base-url (:token config) (:bot-info api/api-methods)))))
 
 
 (defn- update-handler
@@ -42,10 +42,10 @@
           cmd (util/get-text msg)
           handler (get-in handlers [cmd])]
       (if handler
-        (handler msg)
+        (handler msg (util/get-chat-id msg))
         (:else (let [no-command (get-no-command handlers)]
                  (if no-command
-                   (no-command msg)
+                   (no-command msg (util/get-chat-id msg))
                    (:else (no-command-default
                             cmd
                             (:token config)

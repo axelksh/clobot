@@ -6,23 +6,18 @@
 (def base-url "https://api.telegram.org/bot")
 
 
-(def methods
+(def api-methods
   {:sendMessage "/sendMessage"
+   :sendPhoto "/sendPhoto"
    :bot-info "/getMe"})
 
 
-(defn- make-payload
-  "Creates json payload for clj-http"
-  [params-map]
-  {:body (json/write-str params-map)
-   :content-type :json
-   :accept :json})
-
-
 (defn text-message
-  "Sends message from the bot to the chat"
+  "Sends text message to the chat"
   [text token chat-id]
   (http/post
-    (str base-url token (:sendMessage methods))
-    (make-payload {:text text
-                   :chat_id chat-id})))
+    (str base-url token (:sendMessage api-methods))
+    {:body (json/write-str {:text text :chat_id chat-id})
+     :content-type :json
+     :accept :json}))
+
