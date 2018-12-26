@@ -1,5 +1,5 @@
-(defproject clobot "0.1.0"
-  :description "Clobot is a library for creating bots for Telegram messenger"
+(defproject clobot "0.1.1"
+  :description "Clobot is a library for fast and simple Telegram bots creating"
   :url "https://github.com/axelksh/clobot"
   :license {:name "MIT License"
             :url "https://opensource.org/licenses/MIT"}
