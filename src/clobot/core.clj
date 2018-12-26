@@ -56,17 +56,16 @@
   "Creates endpoint to get and process updates from Telegram's servers"
   [handlers config]
   (routes
-    (context (str "/" (:url config)) []
-      (POST "/" [] (update-handler handlers config))
-      (GET "/info" [] (bot-info config)))))
+    (POST "/" [] (update-handler handlers config))
+    (GET "/info" [] (bot-info config))))
 
 
 (defn- print-start-log
   [config]
   (println (str "Starting bot on port: " (:port config)))
   (println (str "Bot's token: " (:token config)))
-  (println (format "Get brief bot info: HOST/%s/info" (:url config)))
-  (println (str "Webhook URL: HOST/" (:url config))))
+  (println "Get brief bot info: http://<your domain>/info, method: GET")
+  (println "Webhook URL: http://<your domain>, method: POST"))
 
 
 (defn start-bot
