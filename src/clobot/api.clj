@@ -10,6 +10,8 @@
   {:sendMessage "/sendMessage"
    :sendDocument "/sendDocument"
    :sendPhoto "/sendPhoto"
+   :sendVideo "/sendVideo"
+   :sendAudio "/sendAudio"
    :bot-info "/getMe"})
 
 
@@ -37,4 +39,20 @@
     (str base-url token (:sendPhoto api-methods))
     {:multipart [{:name "chat_id" :content (str chat-id)}
                  {:name "photo" :content photo}]}))
+
+
+(defn video-message
+  [video token chat-id]
+  (http/post
+    (str base-url token (:sendVideo api-methods))
+    {:multipart [{:name "chat_id" :content (str chat-id)}
+                 {:name "video" :content video}]}))
+
+
+(defn audio-message
+  [audio token chat-id]
+  (http/post
+    (str base-url token (:sendAudio api-methods))
+    {:multipart [{:name "chat_id" :content (str chat-id)}
+                 {:name "audio" :content audio}]}))
 
