@@ -12,6 +12,7 @@
    :sendPhoto "/sendPhoto"
    :sendVideo "/sendVideo"
    :sendAudio "/sendAudio"
+   :sendSticker "/sendSticker"
    :bot-info "/getMe"})
 
 
@@ -56,3 +57,10 @@
     {:multipart [{:name "chat_id" :content (str chat-id)}
                  {:name "audio" :content audio}]}))
 
+
+(defn sticker-message
+  [sticker token chat-id]
+  (http/post
+    (str base-url token (:sendSticker api-methods))
+    {:multipart [{:name "chat_id" :content (str chat-id)}
+                 {:name "sticker" :content sticker}]}))
