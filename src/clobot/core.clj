@@ -22,7 +22,7 @@
 (defn- no-command-default
   "Sends error message to the chat if appropriate handler is not found"
   [command token chat-id]
-  (api/text-message (str command " - Unknown command.") token chat-id))
+  (api/text (str command " - Unknown command.") token chat-id))
 
 
 (defn- bot-info

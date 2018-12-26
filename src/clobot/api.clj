@@ -16,7 +16,7 @@
    :bot-info "/getMe"})
 
 
-(defn text-message
+(defn text
   "Sends text message to the chat"
   [text token chat-id]
   (http/post
@@ -26,7 +26,7 @@
      :accept :json}))
 
 
-(defn document-message
+(defn document
   [document token chat-id]
   (http/post
     (str base-url token (:sendDocument api-methods))
@@ -34,7 +34,7 @@
                  {:name "document" :content document}]}))
 
 
-(defn photo-message
+(defn photo
   [photo token chat-id]
   (http/post
     (str base-url token (:sendPhoto api-methods))
@@ -42,7 +42,7 @@
                  {:name "photo" :content photo}]}))
 
 
-(defn video-message
+(defn video
   [video token chat-id]
   (http/post
     (str base-url token (:sendVideo api-methods))
@@ -50,7 +50,7 @@
                  {:name "video" :content video}]}))
 
 
-(defn audio-message
+(defn audio
   [audio token chat-id]
   (http/post
     (str base-url token (:sendAudio api-methods))
@@ -58,7 +58,7 @@
                  {:name "audio" :content audio}]}))
 
 
-(defn sticker-message
+(defn sticker
   [sticker token chat-id]
   (http/post
     (str base-url token (:sendSticker api-methods))
