@@ -8,6 +8,7 @@
 
 (def api-methods
   {:sendMessage "/sendMessage"
+   :sendDocument "/sendDocument"
    :sendPhoto "/sendPhoto"
    :bot-info "/getMe"})
 
@@ -20,4 +21,20 @@
     {:body (json/write-str {:text text :chat_id chat-id})
      :content-type :json
      :accept :json}))
+
+
+(defn document-message
+  [document token chat-id]
+  (http/post
+    (str base-url token (:sendDocument api-methods))
+    {:multipart [{:name "chat_id" :content (str chat-id)}
+                 {:name "document" :content document}]}))
+
+
+(defn photo-message
+  [photo token chat-id]
+  (http/post
+    (str base-url token (:sendPhoto api-methods))
+    {:multipart [{:name "chat_id" :content (str chat-id)}
+                 {:name "photo" :content photo}]}))
 
