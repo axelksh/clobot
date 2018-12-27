@@ -1,25 +1,27 @@
 # Clobot
 
-Clojure library for creating bots for Telegram messenger
+[![Clojars](https://img.shields.io/clojars/v/clobot.svg)](https://clojars.org/clobot)
+
+Clojure library for fast and simple creating [Telegram](https://telegram.org) bots with webhook written in [Clojure](http://clojure.org) programming language.
 
 
 ## Installation
 
 #### Leiningen
-    [clobot "0.1.0"]
+    [clobot "0.1.1"]
     
 #### Clojure CLI/deps.edn
-    clobot {:mvn/version "0.1.0"}
+    clobot {:mvn/version "0.1.1"}
     
 #### Maven
     <dependency>
        <groupId>clobot</groupId>
        <artifactId>clobot</artifactId>
-       <version>0.1.0</version>
+       <version>0.1.1</version>
     </dependency>
     
 #### Greadle
-    compile 'clobot:clobot:0.1.0'
+    compile 'clobot:clobot:0.1.1'
 
 
 ## Usage
@@ -28,32 +30,76 @@ Clojure library for creating bots for Telegram messenger
 
 ```Clojure
 (ns clobot.example
-  (:require [clobot.core :as bot]))
+  (:require [clobot.core :as bot]
+            [clobot.api :as api]
+            [clobot.util :as util]
+            [clojure.java.io :as io]))
+
 
 (def token "PUT:YOUR:TOKEN:HERE")
 
-(def bot-name "awesome-bot")
 
-(defn greeting
-  [msg]
-  (bot/text-message
+(defn say-hello
+  [msg chat-id]
+  (api/text
     "Hi there from the Clojure bot!"
-    token
-    (bot/get-chat-id msg)))
+    token chat-id))
+
+
+(defn document
+  [msg chat-id]
+  (api/document
+    (io/file "Document.txt")
+    token chat-id))
+
+
+(defn send-photo
+  [msg chat-id]
+  (api/photo
+    (io/file "Photo.jpg")
+    token chat-id))
+
+
+(defn send-video
+  [msg chat-id]
+  (api/video
+    (io/file "Video.avi")
+    token chat-id))
+
+
+(defn send-audio
+  [msg chat-id]
+  (api/audio
+    (io/file "Audio.mp3")
+    token chat-id))
+
+
+(defn send-sticker
+  [msg chat-id]
+  (api/sticker
+    (io/file "Sticker.png")
+    token chat-id))
+
 
 (defn no-command
-  [msg]
-  (bot/text-message
-    (format "Sorry:( Command %s is not found..." (bot/get-command msg))
-    token
-    (bot/get-chat-id msg)))
+  [msg chat-id]
+  (api/text
+    (format "Sorry:( Command %s is not found..." (util/get-text msg))
+    token chat-id))
 
-(def handlers {"hello" greeting
+
+(def handlers {"hello" say-hello
+               "document" send-document
+               "photo" send-photo
+               "video" send-video
+               "audio" send-audio
+               "sticker" send-sticker
                "no-command" no-command})
 
+
 (def config {:token token
-             :name bot-name
-             :port 8080})
+             :port  8080})
+
 
 (defn -main
   []
@@ -67,65 +113,92 @@ Clojure library for creating bots for Telegram messenger
 Import namespace
 ```Clojure
 (ns clobot.example
-  (:require [clobot.core :as bot]))
+  (:require [clobot.core :as bot]
+            [clobot.api :as api]
+            [clobot.util :as util]
+            [clojure.java.io :as io]))
 ```
 
-Create config map with your bot's token, port and bot's name
+Create config map with your bot's token and port
 ```Clojure
 (def token "PUT:YOUR:TOKEN:HERE")
 
-(def bot-name "awesome-bot")
 
 (def config {:token token
-             :name bot-name
              :port 8080})
 ```
 
 Create handlers for the commands you whant your bot to perform.
 ```Clojure
-(defn greeting
-  [msg]
-  (bot/text-message
+;; Sends text message to the chat
+(defn say-hello
+  [msg chat-id]
+  (api/text
     "Hi there from the Clojure bot!"
-    token
-    (bot/get-chat-id msg)))
+    token chat-id))
 
+
+;; Sends document to the chat
+(defn document
+  [msg chat-id]
+  (api/document
+    (io/file "Document.txt")
+    token chat-id))
+
+
+;; Sends document to the chat
+(defn send-photo
+  [msg chat-id]
+  (api/photo
+    (io/file "Photo.jpg")
+    token chat-id))
+
+
+;; Sends video to the chat
+(defn send-video
+  [msg chat-id]
+  (api/video
+    (io/file "Video.avi")
+    token chat-id))
+
+
+;; Sends audio to the chat
+(defn send-audio
+  [msg chat-id]
+  (api/audio
+    (io/file "Audio.mp3")
+    token chat-id))
+
+
+;; Sends sticker to the chat
+(defn send-sticker
+  [msg chat-id]
+  (api/sticker
+    (io/file "Sticker.png")
+    token chat-id))
+
+
+;; Sends bot's response message in case command user sends is not recognized
+;; "no-command" is reserved name for comands error.
+;; If not set will be used default handler
 (defn no-command
-  [msg]
-  (bot/text-message
-    (format "Sorry:( Command %s is not found..." (bot/get-command msg))
-    token
-    (bot/get-chat-id msg)))
-
-(def handlers {"/hello" greeting
-               "no-command" no-command})
+  [msg chat-id]
+  (api/text
+    (format "Sorry:( Command %s is not found..." (util/get-text msg)) ;;
+    token chat-id))                                                   ;; 
 ```
 
-Every time a handler is applied the message object Telegram sent to the bot will passes to the handler and you can process it
+Every time a handler is applied chat id and [message object](https://core.telegram.org/bots/api#message) Telegram sent to the bot will passes to the handler so you can process it
 ```Clojure
 (defn greeting
-  [msg]
+  [msg chat-id]
   ...
   ...
 ```
-
-Send messages to Telegram
-
-**(text-message _text_ _token_ _chat-id_)**
+Util function to retrieve text from the [message object](https://core.telegram.org/bots/api#message) Telegram sent to the bot
 ```Clojure
-(bot/text-message
-    "Hi there from the Clojure bot!"
-    token
-    (bot/get-chat-id msg)))
+(util/get-text msg)
 ```
-
-
-The library provides several useful functions to handle messages
-
-**(get-command _msg_)** - returns command or text sent by user to the bot
-
-**(get-chat-id _msg_)** - returns chat id
-
 
 Start bot with the handlers and the config as parpams
 ```Clojure
@@ -134,21 +207,15 @@ Start bot with the handlers and the config as parpams
   (bot/start-bot handlers config))
 ```
 
-Web application will start on given port with given bot's name as path. For example: 
+Web application will start on given port. For example: 
 
 **to get brief bot info:**
 ```
-http://localhost:8080/awesome-bot/info   
+http://localhost:8080/info   
 ```
 **URL for webhook:**
 ```
-http://localhost:8080/awesome-bot/  
-```
-
-**"no-command"** is the reserved key for the hanlder in case user puts a command not defined in your bot. If not provided will be used default error handler.
-```Clojure
-(def handlers {"/hello" greeting
-               "no-command" no-command})
+http://localhost:8080/  
 ```
 
 
