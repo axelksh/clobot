@@ -46,7 +46,7 @@ Clojure library for fast and simple creating [Telegram](https://telegram.org) bo
     token chat-id))
 
 
-(defn document
+(defn send-document
   [msg chat-id]
   (api/document
     (io/file "Document.txt")
@@ -184,8 +184,18 @@ Create handlers for the commands you whant your bot to perform.
 (defn no-command
   [msg chat-id]
   (api/text
-    (format "Sorry:( Command %s is not found..." (util/get-text msg)) ;;
-    token chat-id))                                                   ;; 
+    (format "Sorry:( Command %s is not found..." (util/get-text msg))
+    token chat-id))
+    
+
+;; Create map with command as key and handler you whant to handles this command as values
+(def handlers {"hello" say-hello
+               "document" send-document
+               "photo" send-photo
+               "video" send-video
+               "audio" send-audio
+               "sticker" send-sticker
+               "no-command" no-command})
 ```
 
 Every time a handler is applied chat id and [message object](https://core.telegram.org/bots/api#message) Telegram sent to the bot will passes to the handler so you can process it
