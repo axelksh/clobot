@@ -2,7 +2,7 @@
 
 [![Clojars](https://img.shields.io/clojars/v/clobot.svg)](https://clojars.org/clobot)
 
-Clojure library for fast and simple creating [Telegram](https://telegram.org) bots with webhook written in [Clojure](http://clojure.org) programming language.
+Library for fast and simple creating [Telegram](https://telegram.org) bots with webhook written in [Clojure](http://clojure.org) programming language.
 
 
 ## Installation
