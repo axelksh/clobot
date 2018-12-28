@@ -227,7 +227,7 @@ http://localhost:8080/info
 ```
 http://localhost:8080/  
 ```
-
+To get webhhok works properly you have to [set the URL for webhook](https://core.telegram.org/bots/api#setwebhook) according to the Telegram api
 
 ## License
 
